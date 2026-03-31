@@ -1,29 +1,26 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from uuid import UUID
 from datetime import datetime
 from typing import List, Optional
 from app.models.session import SessionStatus
 
 
-class SessionBase(BaseModel):
+class SessionCreate(BaseModel):
     mentor_id: UUID
-    student_id: UUID
+    mentor_name: str = Field(..., min_length=1, max_length=255)
 
 
-class SessionCreate(SessionBase):
-    pass 
-
-
-class SessionJoin(SessionBase):
+class SessionJoin(BaseModel):
     session_id: UUID
-    passkey: str
+    passkey: str = Field(..., max_length=10)
+    student_name: str = Field(..., min_length=1, max_length=255)
 
 
-class CodeUpdate(SessionBase):
-    code_content: str
+class CodeUpdate(BaseModel):
+    code_content: str = Field(..., max_length=1_000_000)
 
 
-class SessionEnd(SessionBase):
+class SessionEnd(BaseModel):
     session_id: UUID
 
 
@@ -31,18 +28,17 @@ class SessionResponse(BaseModel):
     id: UUID
     passkey: str
     mentor_id: UUID
-    student_id: UUID
     mentor_name: str
-    student_name: str
+    student_id: Optional[UUID] = None
+    student_name: Optional[str] = None
     status: SessionStatus
-    code_content: str
-    start_time: datetime
-    end_time: Optional[datetime]
+    code_content: Optional[str] = ""
+    start_time: Optional[datetime] = None
+    end_time: Optional[datetime] = None
 
-    class config:
+    class Config:
         from_attributes = True
 
 
 class SessionListResponse(BaseModel):
     sessions: List[SessionResponse]
-

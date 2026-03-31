@@ -19,10 +19,10 @@ class Session(Base):
     passkey = Column(String(10), unique=True, index=True, nullable=False)
 
     mentor_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, index=True)
-    student_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, index=True)
+    student_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True, index=True)
 
-    mentor = relationship("User", foreign_keys=[mentor_id], backref="mentor_sessions")
-    student = relationship("User", foreign_keys=[student_id], backref="student_sessions")
+    mentor_name = Column(String(100), nullable=False)
+    student_name = Column(String(100), nullable=True)
 
     status = Column(
         Enum(SessionStatus, name="session_status"),
@@ -30,26 +30,28 @@ class Session(Base):
         default=SessionStatus.WAITING
     )
 
-    code_content = Column(Text, default="", nullable=False)
+    code_content = Column(Text, default="", nullable=True)
 
     start_time = Column(
         DateTime(timezone=True),
         default=lambda: datetime.now(timezone.utc),
-        nullable=False
+        nullable=True
     )
 
     end_time = Column(
         DateTime(timezone=True),
-        nullable=False
+        nullable=True
     )
 
     created_at = Column(
         DateTime(timezone=True),
-        default=lambda: datetime.now(timezone.utc)
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False
     )
 
     updated_at = Column(
         DateTime(timezone=True),
         default=lambda: datetime.now(timezone.utc),
-        onupdate=lambda: datetime.now(timezone.utc)
+        onupdate=lambda: datetime.now(timezone.utc),
+        nullable=False
     )

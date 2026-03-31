@@ -6,12 +6,15 @@ from sqlalchemy import pool
 
 from alembic import context
 
-sys.path.insert(0, os.path.realpath(os.path.join(os.path.dirname(__file__), '..')))
+import sys
+from os.path import abspath, dirname
+sys.path.insert(0, dirname(dirname(abspath(__file__))))
 
 from app.core.database import Base
 from app.core.config import DATABASE_URL
 from app.models.user import User
-
+from app.models.session import Session
+from app.models.message import Message
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -46,8 +49,7 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    url = DATABASE_URL
-    print(DATABASE_URL)
+    url = config.get_main_option("sqlalchemy.url", DATABASE_URL)
     context.configure(
         url=url,
         target_metadata=target_metadata,
