@@ -58,7 +58,7 @@ def login(data: LoginRequest, db: Session = Depends(get_db)):
 
 
 
-@router.get("/protected")
+@router.get("/me")
 def get_profile(user_id: User = Depends(get_current_user), db: Session = Depends(get_db)):
 
     current_user = db.query(User).filter(User.id == user_id).first()

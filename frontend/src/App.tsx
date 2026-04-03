@@ -1,5 +1,4 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './components/context/AuthContext';
 import { ToastProvider } from './components/hooks/useToast';
 import Dashboard from './components/pages/Dashboard';
 import Login from './components/pages/Login';
@@ -7,44 +6,47 @@ import Register from './components/pages/Register';
 import Session from './components/pages/Session';
 import NotFound from './components/pages/NotFound';
 import Loading from './components/ui/Loading';
- 
+import { useAuth } from './components/hooks/useAuth';
+import JoinSessionPage from './components/pages/JoinSessionPage';
+
 // Protected Route wrapper
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
- 
+
   if (isLoading) {
     return <Loading fullScreen text="Loading..." />;
   }
- 
+
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
- 
+
   return <>{children}</>;
 }
- 
-// Public Route wrapper (redirect if already logged in)
+
+// Public Route wrapper
 function PublicRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
- 
+
   if (isLoading) {
     return <Loading fullScreen text="Loading..." />;
   }
- 
+
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }
- 
+
   return <>{children}</>;
 }
- 
+
 function AppRoutes() {
   return (
     <Routes>
-      {/* Redirect root to dashboard */}
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
- 
-      {/* Public routes */}
+
+      {/* NEW */}
+      <Route path="/join" element={<JoinSessionPage />} />
+
       <Route
         path="/login"
         element={
@@ -61,8 +63,7 @@ function AppRoutes() {
           </PublicRoute>
         }
       />
- 
-      {/* Protected routes */}
+
       <Route
         path="/dashboard"
         element={
@@ -79,19 +80,16 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
- 
-      {/* 404 */}
+
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
- 
+
 export default function App() {
   return (
-      <ToastProvider>
-        <AuthProvider>
-          <AppRoutes />
-        </AuthProvider>
-      </ToastProvider>
+    <ToastProvider>
+      <AppRoutes />
+    </ToastProvider>
   );
 }

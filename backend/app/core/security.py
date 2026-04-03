@@ -48,3 +48,12 @@ def generate_passkey(length: int = 10) -> str:
     characters = string.ascii_uppercase + string.digits
     passkey = ''.join(secrets.choice(characters) for _ in range(length))
     return passkey
+
+
+
+def decode_access_token(token: str):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload
+    except JWSError:
+        return None

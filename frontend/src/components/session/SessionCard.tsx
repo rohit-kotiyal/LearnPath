@@ -62,7 +62,7 @@ export default function SessionCard({ session }: SessionCardProps) {
             </Badge>
           </div>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            {formatRelativeTime(session.created_at)}
+            {formatRelativeTime(session.created_at ?? '')}
           </p>
         </div>
       </div>

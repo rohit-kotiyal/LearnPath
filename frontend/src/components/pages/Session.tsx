@@ -26,13 +26,13 @@ export default function Session() {
   const [isMicOn, setIsMicOn] = useState(false);
   const [showChat, setShowChat] = useState(true);
 
-  // ✅ Safe WebSocket usage
+  // Safe WebSocket usage
   const { isConnected, sendMessage } = useWebSocket(
     id ?? '',
     user?.id ?? ''
   );
 
-  // ✅ Fixed dependency issue using useCallback
+  // Fixed dependency issue using useCallback
   const loadSession = useCallback(async () => {
     if (!id) return;
 
@@ -90,7 +90,7 @@ export default function Session() {
     }
   };
 
-  // ✅ Handle missing id safely
+  // Handle missing id safely
   if (!id) {
     return <div className="p-4">Invalid session</div>;
   }
@@ -139,7 +139,7 @@ export default function Session() {
                 Copy Info
               </button>
 
-              {/* ✅ Chat Toggle (fixes unused setShowChat) */}
+              {/* Chat Toggle (fixes unused setShowChat) */}
               <button
                 onClick={() => setShowChat((prev) => !prev)}
                 className="text-xs text-blue-500 hover:underline"
